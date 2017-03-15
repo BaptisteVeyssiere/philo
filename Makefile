@@ -15,7 +15,9 @@ CC	= gcc
 
 MKDIR	= mkdir -p
 
-SRC	= src/main.c
+SRC	= src/main.c \
+	src/philo.c \
+	src/list.c
 
 SRCDIR	= src
 
@@ -25,8 +27,10 @@ OBJ	= $(SRC:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 CFLAGS	= -W -Werror -Wextra -Wall -I./include
 
+LDFLAGS	= -lpthread
+
 $(NAME): $(OBJ)
-	@$(CC) -o $(NAME) $(OBJ)
+	@$(CC) -o $(NAME) $(OBJ) $(LDFLAGS)
 	@echo "Linking complete!"
 
 $(OBJ): $(OBJDIR)/%.o : $(SRCDIR)/%.c
