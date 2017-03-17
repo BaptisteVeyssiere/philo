@@ -5,7 +5,7 @@
 ** Login   <veyssi_b@epitech.net>
 **
 ** Started on  Tue Mar 14 16:43:09 2017 Baptiste Veyssiere
-** Last update Wed Mar 15 17:08:27 2017 Baptiste Veyssiere
+** Last update Fri Mar 17 08:17:59 2017 Nathan Scutari
 */
 
 #ifndef PHILO_H_
@@ -32,7 +32,11 @@ typedef struct	s_philo
 typedef struct	s_data
 {
   t_philo		*list;
-  pthread_mutex_t	global_lock;
+  pthread_mutex_t	global_lock_1;
+  pthread_mutex_t	global_lock_2;
+  pthread_mutex_t	counter_lock;
+  int			a;
+  int			b;
   int			max_eat;
   int			nbr;
 } t_data;

@@ -5,7 +5,7 @@
 ** Login   <veyssi_b@epitech.net>
 **
 ** Started on  Wed Mar 15 10:13:36 2017 Baptiste Veyssiere
-** Last update Wed Mar 15 14:45:44 2017 Baptiste Veyssiere
+** Last update Fri Mar 17 06:49:50 2017 Nathan Scutari
 */
 
 #include "philo.h"
@@ -53,6 +53,7 @@ t_philo	*create_list(int nbr)
   new->eat = 0;
   new->think = 0;
   new->sleep = 0;
+  new->chopstick = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
   i = 0;
   new->name = 'A';
   buf = new;
