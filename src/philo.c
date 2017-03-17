@@ -5,7 +5,7 @@
 ** Login   <veyssi_b@epitech.net>
 **
 ** Started on  Tue Mar 14 17:18:17 2017 Baptiste Veyssiere
-** Last update Fri Mar 17 08:34:08 2017 Nathan Scutari
+** Last update Fri Mar 17 11:18:07 2017 Nathan Scutari
 */
 
 #include <stdio.h>
@@ -41,18 +41,46 @@ static void	thread_order(t_data *data, int part)
   pthread_mutex_unlock(&data->global_lock_2);
 }
 
+static void	philo_action(t_data *data, t_philo *list)
+{
+  if (list->eat == list->sleep && list->eat == list->think)
+    {
+      lphilo_take_chopstick(&list->chopstick);
+      lphilo_think();
+      lphilo_release_chopstick(&list->chopstick);
+      list->think += 1;
+    }
+  else if (list->eat == list->sleep)
+    {
+      lphilo_take_chopstick(&list->chopstick);
+      lphilo_take_chopstick(&list->next->chopstick);
+      lphilo_eat();
+      lphilo_release_chopstick(&list->chopstick);
+      lphilo_release_chopstick(&list->next->chopstick);
+      if ((list->eat += 1) == data->max_eat)
+	data->end = 1;
+    }
+  else
+    {
+      lphilo_sleep();
+      list->sleep += 1;
+    }
+}
+
 static void	*philosopher(void *ptr)
 {
   t_philo	*list;
   t_data	*data;
 
   data = (t_data*)ptr;
-  while (1)
+  while (!data->end)
     {
       thread_order(data, 1);
       list = data->list;
       while (list->thread_philo != pthread_self())
 	list = list->next;
+      if (!data->end)
+	philo_action(data, list);
       thread_order(data, 2);
     }
   return (NULL);
@@ -67,6 +95,7 @@ int	philo(int nbr, int max_eat)
   data.nbr = nbr;
   data.a = 0;
   data.b = 0;
+  data.end = 0;
   data.global_lock_1 = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
   data.global_lock_2 = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
   data.counter_lock = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
@@ -91,5 +120,6 @@ int	philo(int nbr, int max_eat)
       data.list = data.list->next;
     }
   free_list(data.list, nbr);
+  RCFCleanup();
   return (0);
 }

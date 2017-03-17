@@ -27,15 +27,15 @@ OBJ	= $(SRC:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 CFLAGS	= -W -Werror -Wextra -Wall -I./include
 
-LDFLAGS	= -lpthread
+LDFLAGS	= -lriceferee -lpthread
 
 $(NAME): $(OBJ)
-	@$(CC) -o $(NAME) $(OBJ) $(LDFLAGS)
+	@$(CC) -o $(NAME) $(OBJ) -L./ -Wl,-rpath=./ $(LDFLAGS)
 	@echo "Linking complete!"
 
 $(OBJ): $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@$(MKDIR) $(OBJDIR)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@ -Wl,-rpath=./
 	@echo "Compiled "$<" successfully!"
 
 all: $(NAME)

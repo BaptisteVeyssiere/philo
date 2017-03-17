@@ -5,7 +5,7 @@
 ** Login   <veyssi_b@epitech.net>
 **
 ** Started on  Tue Mar 14 16:43:09 2017 Baptiste Veyssiere
-** Last update Fri Mar 17 08:17:59 2017 Nathan Scutari
+** Last update Fri Mar 17 10:54:23 2017 Nathan Scutari
 */
 
 #ifndef PHILO_H_
@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
+#include "extern.h"
 
 #define USE "Usage: ./philo -p [NBR OF PHILOSOPHERS] -e [MAX EAT OCCURENCE]\n"
 
@@ -39,6 +40,7 @@ typedef struct	s_data
   int			b;
   int			max_eat;
   int			nbr;
+  int			end;
 } t_data;
 
 int	philo(int, int);

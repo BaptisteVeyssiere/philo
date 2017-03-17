@@ -5,7 +5,7 @@
 ** Login   <veyssi_b@epitech.net>
 **
 ** Started on  Tue Mar 14 16:19:28 2017 Baptiste Veyssiere
-** Last update Tue Mar 14 17:15:48 2017 Baptiste Veyssiere
+** Last update Fri Mar 17 10:38:53 2017 Nathan Scutari
 */
 
 #include "philo.h"
@@ -87,6 +87,7 @@ int	main(int ac, char **av)
   int	nbr1;
   int	nbr2;
 
+  RCFStartup(ac, av);
   if (ac < 5 || check_opt(av[1], av[3]))
     {
       fprintf(stderr, USE);
