@@ -5,7 +5,7 @@
 ** Login   <veyssi_b@epitech.net>
 **
 ** Started on  Tue Mar 14 17:18:17 2017 Baptiste Veyssiere
-** Last update Fri Mar 17 11:18:07 2017 Nathan Scutari
+** Last update Fri Mar 17 11:51:21 2017 Nathan Scutari
 */
 
 #include <stdio.h>
@@ -45,18 +45,24 @@ static void	philo_action(t_data *data, t_philo *list)
 {
   if (list->eat == list->sleep && list->eat == list->think)
     {
+      pthread_mutex_lock(&list->chopstick);
       lphilo_take_chopstick(&list->chopstick);
       lphilo_think();
       lphilo_release_chopstick(&list->chopstick);
+      pthread_mutex_unlock(&list->chopstick);
       list->think += 1;
     }
   else if (list->eat == list->sleep)
     {
+      pthread_mutex_lock(&list->chopstick);
+      pthread_mutex_lock(&list->next->chopstick);
       lphilo_take_chopstick(&list->chopstick);
       lphilo_take_chopstick(&list->next->chopstick);
       lphilo_eat();
       lphilo_release_chopstick(&list->chopstick);
       lphilo_release_chopstick(&list->next->chopstick);
+      pthread_mutex_unlock(&list->next->chopstick);
+      pthread_mutex_unlock(&list->chopstick);
       if ((list->eat += 1) == data->max_eat)
 	data->end = 1;
     }
