@@ -5,7 +5,7 @@
 ** Login   <veyssi_b@epitech.net>
 **
 ** Started on  Tue Mar 14 17:18:17 2017 Baptiste Veyssiere
-** Last update Fri Mar 17 11:51:21 2017 Nathan Scutari
+** Last update Sun Mar 19 20:31:59 2017 Baptiste Veyssiere
 */
 
 #include <stdio.h>
@@ -16,8 +16,7 @@ static void	thread_order(t_data *data, int part)
   if (part == 1)
     {
       pthread_mutex_lock(&data->counter_lock);
-      data->a += 1;
-      if (data->a == data->nbr)
+      if (++(data->a) == data->nbr)
 	{
 	  data->a = 0;
 	  pthread_mutex_unlock(&data->global_lock_1);
@@ -66,11 +65,8 @@ static void	philo_action(t_data *data, t_philo *list)
       if ((list->eat += 1) == data->max_eat)
 	data->end = 1;
     }
-  else
-    {
-      lphilo_sleep();
-      list->sleep += 1;
-    }
+  else if (lphilo_sleep() || 1)
+    list->sleep += 1;
 }
 
 static void	*philosopher(void *ptr)
@@ -92,22 +88,30 @@ static void	*philosopher(void *ptr)
   return (NULL);
 }
 
+int	data_init(int max_eat, int nbr, t_data *data)
+{
+  data->max_eat = max_eat;
+  data->nbr = nbr;
+  data->a = 0;
+  data->b = 0;
+  data->end = 0;
+  data->global_lock_1 = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
+  data->global_lock_2 = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
+  data->counter_lock = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
+  pthread_mutex_lock(&data->global_lock_2);
+  pthread_mutex_lock(&data->global_lock_1);
+  if (!(data->list = create_list(nbr)))
+    return (1);
+  return (0);
+}
+
 int	philo(int nbr, int max_eat)
 {
   t_data	data;
   int		i;
 
-  data.max_eat = max_eat;
-  data.nbr = nbr;
-  data.a = 0;
-  data.b = 0;
-  data.end = 0;
-  data.global_lock_1 = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
-  data.global_lock_2 = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
-  data.counter_lock = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
-  pthread_mutex_lock(&data.global_lock_2);
-  pthread_mutex_lock(&data.global_lock_1);
-  if (!(data.list = create_list(nbr)))
+
+  if (data_init(max_eat, nbr, &data))
     return (1);
   i = -1;
   while (++i < nbr)
